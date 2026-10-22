@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>James 3D | Serviços de Impressão 3D, Prototipagem e Peças Técnicas</title>
+  <meta name="description" content="Transformando ideias em realidade tridimensional. Impressão 3D FDM e Resina SLA de alta precisão para engenharia, medicina, arquitetura e criativos.">
+  <meta name="keywords" content="impressão 3d, prototipagem rápida, peças técnicas, filamento pla, petg, abs, resina sla, são paulo, james 3d">
+  
+  <!-- Open Graph / Meta Social -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="James 3D | Impressão 3D e Prototipagem de Alta Precisão">
+  <meta property="og:description" content="Serviços profissionais de impressão 3D FDM e Resina SLA. Simule seu orçamento online e receba sua peça com tolerância micrométrica.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F97316' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'></path><polyline points='3.27 6.96 12 12.01 20.73 6.96'></polyline><line x1='12' y1='22.08' x2='12' y2='12'></line></svg>">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              dark: '#070B14',
+              surface: '#0E1626',
+              card: 'rgba(17, 27, 46, 0.75)',
+              border: 'rgba(56, 189, 248, 0.15)',
+              accent: '#F97316',      /* Filament Neon Orange */
+              accentHover: '#EA580C',
+              accentGlow: '#FB923C',
+              cyan: '#0EA5E9',        /* Tech Blue */
+              cyanGlow: '#38BDF8',
+              gold: '#F59E0B'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            heading: ['"Space Grotesk"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Three.js & Controls for 3D Viewers -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#070B14] text-slate-100 min-h-screen relative overflow-x-hidden selection:bg-brand-accent selection:text-white">
+
+  <!-- Ambient Light Blurs -->
+  <div class="ambient-glow-cyan w-[500px] h-[500px] -top-32 -left-32"></div>
+  <div class="ambient-glow-orange w-[600px] h-[600px] top-[20%] -right-48"></div>
+  <div class="ambient-glow-cyan w-[600px] h-[600px] bottom-[15%] left-[10%]"></div>
+
+  <!-- Background Grid Pattern -->
+  <div class="fixed inset-0 bg-grid-pattern pointer-events-none opacity-40 z-0"></div>
+
+  <!-- HEADER / NAVBAR -->
+  <header id="main-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4 px-4 sm:px-8 border-b border-white/5 bg-[#070B14]/80 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      
+      <!-- Logo -->
+      <a href="#hero" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-accent to-amber-500 flex items-center justify-center shadow-lg shadow-brand-accent/25 group-hover:scale-105 transition-transform">
+          <i data-lucide="box" class="w-6 h-6 text-white stroke-[2.5]"></i>
+        </div>
+        <div>
+          <span class="font-heading font-extrabold text-2xl tracking-wider text-white">
+            JAMES<span class="text-brand-accent">3D</span>
+          </span>
+          <span class="block text-[10px] tracking-widest uppercase font-mono text-brand-cyan font-medium -mt-1">
+            Additive Lab
+          </span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+        <a href="#hero" class="hover:text-brand-cyan transition-colors">Início</a>
+        <a href="#servicos" class="hover:text-brand-cyan transition-colors">Serviços</a>
+        <a href="#calculadora" class="hover:text-brand-accent transition-colors flex items-center gap-1.5 text-brand-accent font-semibold">
+          <i data-lucide="calculator" class="w-4 h-4"></i>
+          Simulador
+        </a>
+        <a href="#diferenciais" class="hover:text-brand-cyan transition-colors">Diferenciais</a>
+        <a href="#portfolio" class="hover:text-brand-cyan transition-colors">Portfólio</a>
+        <a href="#depoimentos" class="hover:text-brand-cyan transition-colors">Depoimentos</a>
+        <a href="#faq" class="hover:text-brand-cyan transition-colors">FAQ</a>
+      </nav>
+
+      <!-- CTA & Status -->
+      <div class="hidden lg:flex items-center gap-4">
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/80 border border-slate-700/60 text-xs text-slate-300 font-mono">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-online"></span>
+          <span>Pronto para imprimir</span>
+        </div>
+        <a href="#calculadora" class="relative group overflow-hidden rounded-xl bg-gradient-to-r from-brand-accent to-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-accent/30 hover:shadow-brand-accent/50 transition-all hover:scale-[1.02] active:scale-[0.98]">
+          <span class="relative z-10 flex items-center gap-2">
+            <i data-lucide="zap" class="w-4 h-4"></i>
+            Orçamento Rápido
+          </span>
+        </a>
+      </div>
+
+      <!-- Mobile Hamburger Button -->
+      <button id="mobile-menu-btn" class="md:hidden p-2.5 rounded-lg bg-slate-800/80 border border-slate-700 text-slate-300 hover:text-white" aria-label="Abrir menu">
+        <i data-lucide="menu" id="menu-icon" class="w-6 h-6"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-menu" class="hidden md:hidden pt-4 pb-6 px-4 mt-3 border-t border-slate-800 bg-[#0E1626]/95 backdrop-blur-2xl rounded-2xl">
+      <div class="flex flex-col gap-4 text-base font-medium">
+        <a href="#hero" class="mobile-nav-link py-2 text-slate-200 hover:text-brand-cyan">Início</a>
+        <a href="#servicos" class="mobile-nav-link py-2 text-slate-200 hover:text-brand-cyan">Serviços</a>
+        <a href="#calculadora" class="mobile-nav-link py-2 text-brand-accent font-semibold flex items-center gap-2">
+          <i data-lucide="calculator" class="w-4 h-4"></i>
+          Simulador de Orçamento
+        </a>
+        <a href="#diferenciais" class="mobile-nav-link py-2 text-slate-200 hover:text-brand-cyan">Diferenciais</a>
+        <a href="#portfolio" class="mobile-nav-link py-2 text-slate-200 hover:text-brand-cyan">Portfólio</a>
+        <a href="#depoimentos" class="mobile-nav-link py-2 text-slate-200 hover:text-brand-cyan">Depoimentos</a>
+        <a href="#faq" class="mobile-nav-link py-2 text-slate-200 hover:text-brand-cyan">Dúvidas Frequentes</a>
+        
+        <div class="pt-3 border-t border-slate-800 flex flex-col gap-3">
+          <a href="#calculadora" class="mobile-nav-link text-center w-full py-3 rounded-xl bg-brand-accent text-white font-bold shadow-lg shadow-brand-accent/25">
+            Solicitar Orçamento Online
+          </a>
+          <a href="https://wa.me/5511999999999?text=Ol%C3%A1%20James%203D!%20Gostaria%20de%20um%20or%C3%A7amento." target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold">
+            <i data-lucide="message-circle" class="w-5 h-5"></i>
+            WhatsApp Direto
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-10 pt-24 sm:pt-28">
+
+    <!-- HERO SECTION -->
+    <section id="hero" class="relative min-h-[90vh] flex items-center px-4 sm:px-8 py-12 lg:py-20">
+      <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Left: Text Content & CTAs -->
+        <div class="lg:col-span-7 flex flex-col items-start gap-6">
+          
+          <!-- Badge Slogan -->
+          <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-slate-800/80 border border-brand-cyan/30 text-xs sm:text-sm font-medium text-brand-cyan shadow-sm">
+            <span class="flex h-2 w-2 rounded-full bg-brand-accent"></span>
+            <span>Transformando ideias em realidade tridimensional</span>
+          </div>
+
+          <!-- Main Headline -->
+          <h1 class="font-heading font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.15] text-white">
+            Prototipagem e Peças em <br class="hidden sm:inline">
+            <span class="bg-gradient-to-r from-brand-accent via-amber-400 to-brand-cyan bg-clip-text text-transparent text-glow-orange">
+              Impressão 3D
+            </span> de Alta Precisão
+          </h1>
+
+          <!-- Subtitle -->
+          <p class="text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed">
+            Do arquivo digital à peça final em até <strong>24 horas</strong>. Fabricamos peças funcionais, protótipos industriais, maquetes e colecionáveis com tecnologia <strong>FDM industrial</strong> e <strong>Resina SLA 8K</strong>.
+          </p>
+
+          <!-- CTAs -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto pt-2">
+            <a href="#calculadora" class="flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-brand-accent to-orange-500 text-white font-bold text-base shadow-xl shadow-brand-accent/25 hover:shadow-brand-accent/40 hover:-translate-y-0.5 transition-all">
+              <i data-lucide="sparkles" class="w-5 h-5"></i>
+              Simular Orçamento Rápido
+            </a>
+            
+            <a href="#portfolio" class="flex items-center justify-center gap-2.5 px-7 py-4 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-700/80 font-semibold text-base transition-all hover:border-brand-cyan/50">
+              <i data-lucide="layers" class="w-5 h-5 text-brand-cyan"></i>
+              Ver Portfólio de Peças
+            </a>
+          </div>
+
+          <!-- Quick Metrics / Social Proof -->
+          <div class="grid grid-cols-3 gap-6 pt-6 border-t border-slate-800/80 w-full max-w-xl">
+            <div>
+              <span class="block font-heading font-bold text-2xl sm:text-3xl text-white font-mono">±0.05<span class="text-brand-accent text-lg">mm</span></span>
+              <span class="text-xs text-slate-400 font-medium">Precisão Dimensional</span>
+            </div>
+            <div>
+              <span class="block font-heading font-bold text-2xl sm:text-3xl text-white font-mono">+8.500</span>
+              <span class="text-xs text-slate-400 font-medium">Peças Entregues</span>
+            </div>
+            <div>
+              <span class="block font-heading font-bold text-2xl sm:text-3xl text-white font-mono">24h</span>
+              <span class="text-xs text-slate-400 font-medium">Envio Rápido SP & BR</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: 3D Interactive Canvas & Controls -->
+        <div class="lg:col-span-5 relative">
+          
+          <!-- Glassmorphism 3D Viewer Container -->
+          <div class="relative w-full aspect-square max-w-[500px] mx-auto rounded-3xl p-1 bg-gradient-to-b from-brand-cyan/20 via-brand-accent/20 to-slate-800/20 shadow-2xl backdrop-blur-xl">
+            <div class="relative w-full h-full rounded-[22px] bg-[#0A101D] overflow-hidden border border-white/10 flex flex-col">
+              
+              <!-- Top bar of 3D viewer -->
+              <div class="absolute top-0 left-0 right-0 z-20 px-4 py-3 bg-slate-900/70 backdrop-blur-md border-b border-white/5 flex items-center justify-between text-xs font-mono text-slate-300">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-brand-accent"></span>
+                  <span class="font-bold text-white tracking-wide">TURBINE_CORE_V3.STL</span>
+                </div>
+                <div class="flex items-center gap-1.5 text-slate-400">
+                  <i data-lucide="mouse-pointer" class="w-3.5 h-3.5 text-brand-cyan"></i>
+                  <span>Arraste para girar</span>
+                </div>
+              </div>
+
+              <!-- Three.js Canvas Element -->
+              <div id="hero-3d-canvas" class="w-full flex-1 cursor-grab active:cursor-grabbing relative">
+                <!-- Laser Scanning line effect -->
+                <div class="laser-line"></div>
+              </div>
+
+              <!-- Interactive 3D Control Pill Bar -->
+              <div class="absolute bottom-3 left-3 right-3 z-20 p-2.5 rounded-2xl bg-slate-950/85 backdrop-blur-md border border-white/10 flex items-center justify-between gap-2 shadow-xl">
+                
+                <!-- Filament Color Switcher -->
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[10px] uppercase font-mono text-slate-400 mr-1 hidden sm:inline">Filamento:</span>
+                  <button type="button" class="color-btn w-6 h-6 rounded-full bg-orange-500 ring-2 ring-white/80 transition-transform hover:scale-110 active:scale-95" data-color="0xF97316" title="Laranja Neon"></button>
+                  <button type="button" class="color-btn w-6 h-6 rounded-full bg-sky-400 ring-1 ring-white/20 transition-transform hover:scale-110 active:scale-95" data-color="0x38BDF8" title="Azul Cyber"></button>
+                  <button type="button" class="color-btn w-6 h-6 rounded-full bg-amber-400 ring-1 ring-white/20 transition-transform hover:scale-110 active:scale-95" data-color="0xF59E0B" title="Dourado Silk"></button>
+                  <button type="button" class="color-btn w-6 h-6 rounded-full bg-slate-200 ring-1 ring-white/20 transition-transform hover:scale-110 active:scale-95" data-color="0xF1F5F9" title="Branco Técnico"></button>
+                </div>
+
+                <!-- Control Toggles -->
+                <div class="flex items-center gap-1.5">
+                  <button id="toggle-wireframe-btn" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] font-mono text-slate-300 flex items-center gap-1 border border-slate-700 transition-colors">
+                    <i data-lucide="grid" class="w-3.5 h-3.5 text-brand-cyan"></i>
+                    <span>Malha</span>
+                  </button>
+                  <button id="reset-cam-btn" class="p-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors" title="Resetar visualização">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                  </button>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Floating Specs Chip -->
+          
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CALCULADORA / SIMULADOR DE ORÇAMENTO RÁPIDO (INTERATIVO) -->
+    <section id="calculadora" class="relative px-4 sm:px-8 py-20 scroll-mt-20">
+      <div class="max-w-6xl mx-auto">
+        
+        <!-- Section Header -->
+        <div class="text-center max-w-3xl mx-auto mb-14">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-accent/10 border border-brand-accent/30 text-xs font-semibold text-brand-accent mb-3 uppercase tracking-wider font-mono">
+            <i data-lucide="calculator" class="w-3.5 h-3.5"></i>
+            Simulador de Orçamento Imediato
+          </div>
+          <h2 class="font-heading font-extrabold text-3xl sm:text-4xl text-white">
+            Calcule sua Impressão 3D em Segundos
+          </h2>
+          <p class="text-slate-400 mt-3 text-base">
+            Selecione o material técnico, defina a densidade estrutural e envie seu arquivo 3D para obter a prévia de custo e prazo.
+          </p>
+        </div>
+
+        <!-- Calculator Interactive Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- Configuration Form (8 cols) -->
+          <div class="lg:col-span-7 flex flex-col gap-8 bg-slate-900/60 p-6 sm:p-8 rounded-3xl border border-white/10 backdrop-blur-xl shadow-2xl">
+            
+            <!-- STEP 1: Material Selection -->
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <label class="text-sm font-bold text-white flex items-center gap-2">
+                  <span class="w-5 h-5 rounded-full bg-brand-accent text-white flex items-center justify-center text-xs">1</span>
+                  Selecione o Material de Impressão:
+                </label>
+                <span id="selected-material-badge" class="tech-badge">PLA+ Premium</span>
+              </div>
+
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="material-selector">
+                
+                <!-- PLA -->
+                <button type="button" data-material="pla" data-price-mult="1.0" data-speed="1.0" class="material-card active relative text-left p-3.5 rounded-2xl border border-brand-accent bg-brand-accent/10 hover:border-brand-accent transition-all flex flex-col justify-between">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="font-bold text-white text-sm">PLA+</span>
+                    <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400">Popular</span>
+                  </div>
+                  <p class="text-[11px] text-slate-300 leading-tight">Visual perfeito, protótipos e maquetes.</p>
+                  <div class="mt-2 text-[10px] text-brand-cyan font-mono">Têmpera: 60°C</div>
+                </button>
+
+                <!-- PETG -->
+                <button type="button" data-material="petg" data-price-mult="1.25" data-speed="1.1" class="material-card relative text-left p-3.5 rounded-2xl border border-slate-700/80 bg-slate-800/40 hover:border-slate-500 transition-all flex flex-col justify-between">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="font-bold text-white text-sm">PETG</span>
+                    <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400">Duro</span>
+                  </div>
+                  <p class="text-[11px] text-slate-300 leading-tight">Resistente a raios UV e impactos leves.</p>
+                  <div class="mt-2 text-[10px] text-brand-cyan font-mono">Têmpera: 80°C</div>
+                </button>
+
+                <!-- ABS -->
+                <button type="button" data-material="abs" data-price-mult="1.35" data-speed="1.2" class="material-card relative text-left p-3.5 rounded-2xl border border-slate-700/80 bg-slate-800/40 hover:border-slate-500 transition-all flex flex-col justify-between">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="font-bold text-white text-sm">ABS</span>
+                    <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-400">Técnico</span>
+                  </div>
+                  <p class="text-[11px] text-slate-300 leading-tight">Usinável, térmico e automotivo.</p>
+                  <div class="mt-2 text-[10px] text-brand-cyan font-mono">Têmpera: 100°C</div>
+                </button>
+
+                <!-- RESINA SLA -->
+                <button type="button" data-material="resina" data-price-mult="2.1" data-speed="1.5" class="material-card relative text-left p-3.5 rounded-2xl border border-slate-700/80 bg-slate-800/40 hover:border-slate-500 transition-all flex flex-col justify-between">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="font-bold text-white text-sm">Resina SLA</span>
+                    <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-400">8K Ultra</span>
+                  </div>
+                  <p class="text-[11px] text-slate-300 leading-tight">Detalhes microscópicos e joias.</p>
+                  <div class="mt-2 text-[10px] text-brand-cyan font-mono">Camada: 0.05mm</div>
+                </button>
+
+              </div>
+            </div>
+
+            <!-- STEP 2: Infill & Resistance Slider -->
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <label for="infill-slider" class="text-sm font-bold text-white flex items-center gap-2">
+                  <span class="w-5 h-5 rounded-full bg-brand-accent text-white flex items-center justify-center text-xs">2</span>
+                  Preenchimento / Resistência Interna (Infill):
+                </label>
+                <span id="infill-display-val" class="text-base font-bold text-brand-accent font-mono">25% (Padrão)</span>
+              </div>
+
+              <!-- Range Slider -->
+              <div class="py-2">
+                <input id="infill-slider" type="range" min="10" max="100" step="5" value="25" class="w-full">
+              </div>
+
+              <!-- Quick Presets -->
+              <div class="grid grid-cols-4 gap-2 mt-2">
+                <button type="button" class="infill-preset-btn text-xs py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono transition-colors active:scale-95" data-val="15">
+                  15% Baixa
+                </button>
+                <button type="button" class="infill-preset-btn text-xs py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono transition-colors active:scale-95" data-val="30">
+                  30% Média
+                </button>
+                <button type="button" class="infill-preset-btn text-xs py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono transition-colors active:scale-95" data-val="60">
+                  60% Alta
+                </button>
+                <button type="button" class="infill-preset-btn text-xs py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono transition-colors active:scale-95" data-val="100">
+                  100% Sólido
+                </button>
+              </div>
+              <p class="text-xs text-slate-400 mt-1.5 flex items-center gap-1.5">
+                <i data-lucide="info" class="w-3.5 h-3.5 text-brand-cyan"></i>
+                <span id="infill-advice">Excelente equilíbrio entre custo, leveza e durabilidade para protótipos.</span>
+              </p>
+            </div>
+
+            <!-- STEP 3: Size / Estimated Weight Slider -->
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <label for="weight-slider" class="text-sm font-bold text-white flex items-center gap-2">
+                  <span class="w-5 h-5 rounded-full bg-brand-accent text-white flex items-center justify-center text-xs">3</span>
+                  Estimativa de Tamanho / Volume da Peça:
+                </label>
+                <span id="weight-display-val" class="text-base font-bold text-brand-cyan font-mono">Médio (~80g)</span>
+              </div>
+              <div class="py-2">
+                <input id="weight-slider" type="range" min="15" max="500" step="5" value="80" class="w-full">
+              </div>
+              <div class="flex justify-between text-[11px] font-mono text-slate-400">
+                <span>Pequeno (&lt; 20g)</span>
+                <span>Médio (80g)</span>
+                <span>Grande (250g)</span>
+                <span>Industrial (&gt; 500g)</span>
+              </div>
+            </div>
+
+            <!-- STEP 4: Drag & Drop 3D File (.STL / .OBJ / .STEP) -->
+            <div>
+              <label class="text-sm font-bold text-white flex items-center gap-2 mb-2">
+                <span class="w-5 h-5 rounded-full bg-brand-accent text-white flex items-center justify-center text-xs">4</span>
+                Envie o Arquivo 3D (.STL, .OBJ ou .STEP):
+              </label>
+              
+              <div id="drop-zone" class="relative group cursor-pointer border-2 border-dashed border-slate-700 hover:border-brand-accent/80 rounded-2xl p-6 text-center transition-all bg-slate-950/40">
+                <input type="file" id="file-input" accept=".stl,.obj,.step,.3mf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                
+                <div id="drop-zone-idle" class="flex flex-col items-center justify-center gap-2">
+                  <div class="w-12 h-12 rounded-2xl bg-brand-cyan/10 group-hover:bg-brand-accent/20 flex items-center justify-center text-brand-cyan group-hover:text-brand-accent transition-colors">
+                    <i data-lucide="upload-cloud" class="w-6 h-6"></i>
+                  </div>
+                  <p class="text-sm font-medium text-white">
+                    Arraste o arquivo ou <span class="text-brand-accent underline underline-offset-4">clique para carregar</span>
+                  </p>
+                  <p class="text-xs text-slate-400 font-mono">Formatos aceitos: .STL, .OBJ, .STEP, .3MF (Até 100MB)</p>
+                </div>
+
+                <!-- Active Upload State (Hidden by default) -->
+                <div id="drop-zone-file" class="hidden flex items-center justify-between gap-4 p-3 rounded-xl bg-slate-800/80 border border-emerald-500/40">
+                  <div class="flex items-center gap-3 text-left">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                      <i data-lucide="check-circle" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                      <p id="uploaded-file-name" class="text-sm font-bold text-white truncate max-w-[200px] sm:max-w-xs font-mono">peca_projeto.stl</p>
+                      <p id="uploaded-file-size" class="text-xs text-slate-400 font-mono">4.2 MB • Modelo Validado</p>
+                    </div>
+                  </div>
+                  <button type="button" id="remove-file-btn" class="p-2 text-slate-400 hover:text-red-400 transition-colors" title="Remover arquivo">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Summary & Quote Output Card (5 cols) -->
+          <div class="lg:col-span-5 sticky top-28 bg-gradient-to-b from-slate-900 to-[#0A1120] p-6 sm:p-8 rounded-3xl border border-brand-cyan/30 shadow-2xl backdrop-blur-2xl">
+            
+            <div class="flex items-center justify-between pb-5 border-b border-slate-800">
+              <span class="text-xs font-mono uppercase tracking-wider text-brand-cyan font-bold">Resumo da Estimativa</span>
+              <span class="tech-badge-orange">Orçamento Imediato</span>
+            </div>
+
+            <!-- Price & Lead Time Display -->
+            <div class="py-6">
+              <span class="text-xs text-slate-400 block font-mono">Investimento Estimado:</span>
+              <div class="flex items-baseline gap-2 mt-1">
+                <span class="text-sm font-bold text-slate-300">R$</span>
+                <span id="calculated-price" class="text-4xl sm:text-5xl font-extrabold font-heading text-white tracking-tight">48,00</span>
+                <span class="text-xs text-slate-400">à vista</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-2 flex items-center gap-2">
+                <i data-lucide="clock" class="w-4 h-4 text-brand-cyan"></i>
+                Tempo de produção estimado: <strong id="calculated-time" class="text-white">4 a 6 horas</strong>
+              </p>
+            </div>
+
+            <!-- Breakdown list -->
+            <div class="space-y-3 py-4 border-t border-b border-slate-800/80 text-xs sm:text-sm">
+              <div class="flex justify-between text-slate-300">
+                <span>Material Escolhido:</span>
+                <strong id="summary-material" class="text-white font-mono">PLA+ Premium</strong>
+              </div>
+              <div class="flex justify-between text-slate-300">
+                <span>Densidade de Infill:</span>
+                <strong id="summary-infill" class="text-white font-mono">25%</strong>
+              </div>
+              <div class="flex justify-between text-slate-300">
+                <span>Peso Estimado:</span>
+                <strong id="summary-weight" class="text-white font-mono">80g</strong>
+              </div>
+              <div class="flex justify-between text-slate-300">
+                <span>Acabamento:</span>
+                <span class="text-emerald-400 font-medium">Inspeção Técnica Inclusa</span>
+              </div>
+            </div>
+
+            <!-- Quantity Multiplier -->
+            <div class="flex items-center justify-between py-4">
+              <span class="text-xs text-slate-300 font-medium">Quantidade de Peças:</span>
+              <div class="flex items-center gap-3">
+                <button type="button" id="qty-minus" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold flex items-center justify-center transition-colors">-</button>
+                <span id="qty-val" class="font-mono font-bold text-white w-6 text-center">1</span>
+                <button type="button" id="qty-plus" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold flex items-center justify-center transition-colors">+</button>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col gap-3 pt-2">
+              <button type="button" id="send-whatsapp-btn" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-base shadow-xl shadow-emerald-900/30 flex items-center justify-center gap-3 transition-all hover:scale-[1.01] active:scale-[0.99]">
+                <i data-lucide="message-circle" class="w-5 h-5"></i>
+                Enviar Projeto via WhatsApp
+              </button>
+
+              <button type="button" id="email-quote-btn" class="w-full py-3 px-6 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 font-medium text-xs sm:text-sm flex items-center justify-center gap-2 border border-slate-700 transition-colors">
+                <i data-lucide="mail" class="w-4 h-4 text-slate-400"></i>
+                Solicitar Cotação por E-mail Formal
+              </button>
+            </div>
+
+            <!-- Guarantee Note -->
+            <p class="text-[11px] text-slate-400 text-center mt-4 flex items-center justify-center gap-1.5">
+              <i data-lucide="shield-check" class="w-3.5 h-3.5 text-brand-cyan"></i>
+              Garantia de sigilo profissional & Acordo de NDA disponível.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SERVIÇOS EM DESTAQUE -->
+    <section id="servicos" class="relative px-4 sm:px-8 py-20 bg-slate-950/50">
+      <div class="max-w-7xl mx-auto">
+        
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-cyan/10 border border-brand-cyan/30 text-xs font-semibold text-brand-cyan mb-3 uppercase tracking-wider font-mono">
+            Especialidades James 3D
+          </div>
+          <h2 class="font-heading font-extrabold text-3xl sm:text-4xl text-white">
+            Soluções Completas em Manufatura Aditiva
+          </h2>
+          <p class="text-slate-400 mt-3 text-base">
+            Equipamentos industriais calibrados para entregar precisão milimétrica e resistência mecânica para qualquer demanda.
+          </p>
+        </div>
+
+        <!-- 4 Services Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          
+          <!-- Card 1: Prototipagem Rápida -->
+          <div class="glass-card-interactive p-6 rounded-3xl flex flex-col justify-between group">
+            <div>
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-accent/20 to-orange-500/10 border border-brand-accent/30 flex items-center justify-center text-brand-accent mb-6 group-hover:scale-110 transition-transform">
+                <i data-lucide="zap" class="w-7 h-7"></i>
+              </div>
+              <span class="text-xs font-mono text-brand-accent uppercase tracking-wider font-semibold">Agilidade 24h</span>
+              <h3 class="font-heading font-bold text-xl text-white mt-1 mb-3">Prototipagem Rápida</h3>
+              <p class="text-sm text-slate-300 leading-relaxed">
+                Valide formas, ergonomia e montagens mecânicas antes da produção em massa. Itere projetos em questão de horas com baixo custo.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-800/80">
+              <ul class="text-xs text-slate-400 space-y-1.5 font-mono">
+                <li class="flex items-center gap-1.5">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-brand-cyan"></i> Testes de Encaixe e Folga
+                </li>
+                <li class="flex items-center gap-1.5">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-brand-cyan"></i> Modelos Ergonômicos
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Card 2: Peças Técnicas & Industriais -->
+          <div class="glass-card-interactive p-6 rounded-3xl flex flex-col justify-between group">
+            <div>
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-cyan/20 to-blue-500/10 border border-brand-cyan/30 flex items-center justify-center text-brand-cyan mb-6 group-hover:scale-110 transition-transform">
+                <i data-lucide="settings" class="w-7 h-7"></i>
+              </div>
+              <span class="text-xs font-mono text-brand-cyan uppercase tracking-wider font-semibold">Alta Carga</span>
+              <h3 class="font-heading font-bold text-xl text-white mt-1 mb-3">Peças Técnicas Finais</h3>
+              <p class="text-sm text-slate-300 leading-relaxed">
+                Produção sob demanda de engrenagens, gabaritos de solda, suportes automotivos e componentes em ABS, PETG e Nylon Carbono.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-800/80">
+              <ul class="text-xs text-slate-400 space-y-1.5 font-mono">
+                <li class="flex items-center gap-1.5">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-brand-accent"></i> Resistência a Impacto & Calor
+                </li>
+                <li class="flex items-center gap-1.5">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-brand-accent"></i> Substituição de Peças Raras
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Card 3: Maquetes & Colecionáveis -->
+          <div class="glass-card-interactive p-6 rounded-3xl flex flex-col justify-between group">
+            <div>
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 mb-6 group-hover:scale-110 transition-transform">
+                <i data-lucide="gem" class="w-7 h-7"></i>
+              </div>
+              <span class="text-xs font-mono text-purple-400 uppercase tracking-wider font-semibold">Resina 8K</span>
+              <h3 class="font-heading font-bold text-xl text-white mt-1 mb-3">Maquetes & Colecionáveis</h3>
+              <p class="text-sm text-slate-300 leading-relaxed">
+                Detalhamento ultra-fino para arquitetura, dioramas, miniaturas RPG, bustos e peças artísticas sem marcas de camadas visíveis.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-800/80">
+              <ul class="text-xs text-slate-400 space-y-1.5 font-mono">
+                <li class="flex items-center gap-1.5">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-purple-400"></i> Resolução 8K Micrométrica
+                </li>
+                <li class="flex items-center gap-1.5">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-purple-400"></i> Acabamento Liso Pronto p/ Pintura
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Card 4: Consultoria & Manutenção -->
+          <div class="glass-card-interactive p-6 rounded-3xl flex flex-col justify-between group">
+            <div>
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500/20 to-yellow-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 mb-6 group-hover:scale-110 transition-transform">
+                <i data-lucide="wrench" class="w-7 h-7"></i>
+              </div>
+              <span class="text-xs font-mono text-amber-400 uppercase tracking-wider font-semibold">Suporte Técnico</span>
+              <h3 class="font-heading font-bold text-xl text-white mt-1 mb-3">Consultoria & Manutenção</h3>
+              <p class="text-sm text-slate-300 leading-relaxed">
+                Calibração profissional de impressoras 3D, upgrades de extrusoras, hotends, nivelamento automático e treinamento corporativo.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-800/80">
+              <ul class="text-xs text-slate-400 space-y-1.5 font-mono">
+                <li class="flex items-center gap-1.5">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-amber-400"></i> Otimização de Perfis Slicer
+                </li>
+                <li class="flex items-center gap-1.5">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-amber-400"></i> Manutenção Preventiva & Corretiva
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- DIFERENCIAIS TECNOLÓGICOS (FLOW & QUALIDADE) -->
+    <section id="diferenciais" class="relative px-4 sm:px-8 py-20">
+      <div class="max-w-7xl mx-auto">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          <div class="lg:col-span-6 flex flex-col gap-6">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-accent/10 border border-brand-accent/30 text-xs font-semibold text-brand-accent uppercase tracking-wider font-mono">
+              Por que a James 3D?
+            </div>
+            <h2 class="font-heading font-extrabold text-3xl sm:text-4xl text-white leading-tight">
+              Engenharia e Precisão em Cada Camada Depositada
+            </h2>
+            <p class="text-slate-300 text-base leading-relaxed">
+              Não entregamos apenas impressões; entregamos soluções dimensionadas para suas necessidades reais. Analisamos a orientação de impressão para maximizar a resistência mecânica e minimizar suportes.
+            </p>
+
+            <div class="space-y-4 pt-2">
+              <div class="flex items-start gap-4 p-4 rounded-2xl bg-slate-900/60 border border-white/5">
+                <div class="w-10 h-10 rounded-xl bg-brand-cyan/20 text-brand-cyan flex-shrink-0 flex items-center justify-center">
+                  <i data-lucide="shield-alert" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-white text-sm">Inspeção Visual e Dimensional com Paquímetro Digital</h4>
+                  <p class="text-xs text-slate-400 mt-1">Cada peça passa por conferência métrica antes de ser despachada.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-4 p-4 rounded-2xl bg-slate-900/60 border border-white/5">
+                <div class="w-10 h-10 rounded-xl bg-brand-accent/20 text-brand-accent flex-shrink-0 flex items-center justify-center">
+                  <i data-lucide="flame" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-white text-sm">Filamentos Premium Desidratados</h4>
+                  <p class="text-xs text-slate-400 mt-1">Armazenamento em caixas desumidificadoras ativas, eliminando bolhas, stringing e falhas estruturais.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-4 p-4 rounded-2xl bg-slate-900/60 border border-white/5">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex-shrink-0 flex items-center justify-center">
+                  <i data-lucide="truck" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-white text-sm">Embalagem Blindada a Vácuo</h4>
+                  <p class="text-xs text-slate-400 mt-1">Proteção contra umidade e impactos durante o frete para todo o território nacional.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Process Visual Steps -->
+          <div class="lg:col-span-6 bg-gradient-to-tr from-slate-900 to-slate-800/80 p-8 rounded-3xl border border-white/10 shadow-2xl">
+            <h3 class="font-heading font-bold text-xl text-white mb-6 flex items-center gap-2">
+              <i data-lucide="git-commit" class="w-5 h-5 text-brand-accent"></i>
+              Como Funciona o Processo:
+            </h3>
+
+            <div class="relative border-l-2 border-slate-700 ml-4 space-y-8 pl-6">
+              
+              <!-- Step 1 -->
+              <div class="relative group">
+                <div class="absolute -left-[35px] top-0 w-8 h-8 rounded-full bg-brand-accent text-white font-mono font-bold text-xs flex items-center justify-center ring-4 ring-slate-900 shadow-md">
+                  01
+                </div>
+                <h4 class="font-bold text-white text-base">Envio do Arquivo 3D</h4>
+                <p class="text-xs text-slate-400 mt-1">Envie seu arquivo STL, OBJ ou STEP pelo simulador online ou WhatsApp.</p>
+              </div>
+
+              <!-- Step 2 -->
+              <div class="relative group">
+                <div class="absolute -left-[35px] top-0 w-8 h-8 rounded-full bg-brand-cyan text-white font-mono font-bold text-xs flex items-center justify-center ring-4 ring-slate-900 shadow-md">
+                  02
+                </div>
+                <h4 class="font-bold text-white text-base">Fatiamento e Análise de Malha (DfAM)</h4>
+                <p class="text-xs text-slate-400 mt-1">Nossos técnicos revisam a espessura de paredes e a resistência mecânica da peça.</p>
+              </div>
+
+              <!-- Step 3 -->
+              <div class="relative group">
+                <div class="absolute -left-[35px] top-0 w-8 h-8 rounded-full bg-amber-500 text-white font-mono font-bold text-xs flex items-center justify-center ring-4 ring-slate-900 shadow-md">
+                  03
+                </div>
+                <h4 class="font-bold text-white text-base">Impressão de Alta Precisão</h4>
+                <p class="text-xs text-slate-400 mt-1">Fabricação no material correto com monitoramento em tempo real por câmeras de IA.</p>
+              </div>
+
+              <!-- Step 4 -->
+              <div class="relative group">
+                <div class="absolute -left-[35px] top-0 w-8 h-8 rounded-full bg-emerald-500 text-white font-mono font-bold text-xs flex items-center justify-center ring-4 ring-slate-900 shadow-md">
+                  04
+                </div>
+                <h4 class="font-bold text-white text-base">Pós-Processamento e Despacho</h4>
+                <p class="text-xs text-slate-400 mt-1">Cura UV, remoção de suportes, lixamento e envio seguro até o seu endereço.</p>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- GALERIA / PORTFÓLIO DE PEÇAS -->
+    <section id="portfolio" class="relative px-4 sm:px-8 py-20 bg-slate-950/40">
+      <div class="max-w-7xl mx-auto">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-cyan/10 border border-brand-cyan/30 text-xs font-semibold text-brand-cyan mb-3 uppercase tracking-wider font-mono">
+              Galeria de Projetos Recentes
+            </div>
+            <h2 class="font-heading font-extrabold text-3xl sm:text-4xl text-white">
+              Portfólio de Impressões
+            </h2>
+            <p class="text-slate-400 mt-2 text-base">
+              Conheça algumas das peças técnicas, protótipos industriais e colecionáveis que produzimos.
+            </p>
+          </div>
+
+          <!-- Category Filter Buttons -->
+          <div class="flex flex-wrap gap-2 p-1.5 rounded-2xl bg-slate-900/90 border border-white/10 self-start md:self-auto" id="portfolio-filters">
+            <button type="button" class="filter-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-brand-accent text-white shadow-md shadow-brand-accent/30" data-filter="all">
+              Todos
+            </button>
+            <button type="button" class="filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-400 hover:text-white transition-all" data-filter="tecnico">
+              Técnico & Peças
+            </button>
+            <button type="button" class="filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-400 hover:text-white transition-all" data-filter="prototipo">
+              Protótipos
+            </button>
+            <button type="button" class="filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-400 hover:text-white transition-all" data-filter="arte">
+              Arte & Colecionáveis
+            </button>
+          </div>
+        </div>
+
+        <!-- Portfolio Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="portfolio-grid">
+          
+          <!-- Item 1: Técnico -->
+          <div class="portfolio-item group relative rounded-3xl overflow-hidden bg-slate-900 border border-white/10" data-category="tecnico">
+            <div class="relative aspect-video sm:aspect-square overflow-hidden bg-slate-800">
+              <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80" alt="Gabinete Eletrônico Técnico em PETG" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
+              <span class="absolute top-4 left-4 tech-badge">Técnico / PETG</span>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 p-6">
+              <h3 class="font-heading font-bold text-lg text-white group-hover:text-brand-accent transition-colors">Case Técnico Automotivo</h3>
+              <p class="text-xs text-slate-300 mt-1 line-clamp-2">Gabinete de proteção para telemetria embarcada com inserções rosqueadas de latão aquecidas.</p>
+              <div class="mt-3 flex items-center justify-between text-xs text-brand-cyan font-mono">
+                <span>Tolerância: ±0.08mm</span>
+                <span class="flex items-center gap-1 group-hover:translate-x-1 transition-transform">Ver Detalhes <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 2: Protótipo -->
+          <div class="portfolio-item group relative rounded-3xl overflow-hidden bg-slate-900 border border-white/10" data-category="prototipo">
+            <div class="relative aspect-video sm:aspect-square overflow-hidden bg-slate-800">
+              <img src="https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&q=80" alt="Braço Robótico Prototipado" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
+              <span class="absolute top-4 left-4 tech-badge-orange">Protótipo / PLA+</span>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 p-6">
+              <h3 class="font-heading font-bold text-lg text-white group-hover:text-brand-accent transition-colors">Garra Robótica Articulada</h3>
+              <p class="text-xs text-slate-300 mt-1 line-clamp-2">Mecanismo funcional impresso para teste de torque em robô colaborativo industrial.</p>
+              <div class="mt-3 flex items-center justify-between text-xs text-brand-cyan font-mono">
+                <span>Infill: 60% Gyroid</span>
+                <span class="flex items-center gap-1 group-hover:translate-x-1 transition-transform">Ver Detalhes <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 3: Arte & Colecionáveis -->
+          <div class="portfolio-item group relative rounded-3xl overflow-hidden bg-slate-900 border border-white/10" data-category="arte">
+            <div class="relative aspect-video sm:aspect-square overflow-hidden bg-slate-800">
+              <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80" alt="Busto Artístico em Resina SLA" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
+              <span class="absolute top-4 left-4 px-2 py-0.5 rounded-full text-xs font-mono font-semibold bg-purple-500/20 text-purple-400 border border-purple-500/30">Arte / Resina 8K</span>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 p-6">
+              <h3 class="font-heading font-bold text-lg text-white group-hover:text-brand-accent transition-colors">Escultura Neoclássica High-Detail</h3>
+              <p class="text-xs text-slate-300 mt-1 line-clamp-2">Impressão em resina SLA cinza com camadas de 0.03mm para galeria de arte contemporânea.</p>
+              <div class="mt-3 flex items-center justify-between text-xs text-brand-cyan font-mono">
+                <span>Camada: 30 microns</span>
+                <span class="flex items-center gap-1 group-hover:translate-x-1 transition-transform">Ver Detalhes <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 4: Técnico -->
+          <div class="portfolio-item group relative rounded-3xl overflow-hidden bg-slate-900 border border-white/10" data-category="tecnico">
+            <div class="relative aspect-video sm:aspect-square overflow-hidden bg-slate-800">
+              <img src="https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=800&q=80" alt="Conjunto de Engrenagens Helicoidais" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
+              <span class="absolute top-4 left-4 tech-badge">Técnico / Nylon PA12</span>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 p-6">
+              <h3 class="font-heading font-bold text-lg text-white group-hover:text-brand-accent transition-colors">Trem de Engrenagens Planetárias</h3>
+              <p class="text-xs text-slate-300 mt-1 line-clamp-2">Engrenagens de substituição para maquinário fabril com lubrificação integrada.</p>
+              <div class="mt-3 flex items-center justify-between text-xs text-brand-cyan font-mono">
+                <span>Auto-lubrificante</span>
+                <span class="flex items-center gap-1 group-hover:translate-x-1 transition-transform">Ver Detalhes <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 5: Protótipo -->
+          <div class="portfolio-item group relative rounded-3xl overflow-hidden bg-slate-900 border border-white/10" data-category="prototipo">
+            <div class="relative aspect-video sm:aspect-square overflow-hidden bg-slate-800">
+              <img src="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80" alt="Dispositivo Médico Prototipado" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
+              <span class="absolute top-4 left-4 tech-badge-orange">Protótipo / PETG</span>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 p-6">
+              <h3 class="font-heading font-bold text-lg text-white group-hover:text-brand-accent transition-colors">Dispositivo Wearable de Saúde</h3>
+              <p class="text-xs text-slate-300 mt-1 line-clamp-2">Protótipo ergonômico impresso em 18 horas para rodada de testes clínicos.</p>
+              <div class="mt-3 flex items-center justify-between text-xs text-brand-cyan font-mono">
+                <span>Acabamento acetinado</span>
+                <span class="flex items-center gap-1 group-hover:translate-x-1 transition-transform">Ver Detalhes <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 6: Arte & Maquete -->
+          <div class="portfolio-item group relative rounded-3xl overflow-hidden bg-slate-900 border border-white/10" data-category="arte">
+            <div class="relative aspect-video sm:aspect-square overflow-hidden bg-slate-800">
+              <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80" alt="Maquete Arquitetônica Interativa" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
+              <span class="absolute top-4 left-4 px-2 py-0.5 rounded-full text-xs font-mono font-semibold bg-amber-500/20 text-amber-400 border border-amber-500/30">Maquete / Híbrida</span>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 p-6">
+              <h3 class="font-heading font-bold text-lg text-white group-hover:text-brand-accent transition-colors">Maquete Urbana Volumétrica</h3>
+              <p class="text-xs text-slate-300 mt-1 line-clamp-2">Complexo residencial em escala 1:200 com encaixes magnéticos para lançamento imobiliário.</p>
+              <div class="mt-3 flex items-center justify-between text-xs text-brand-cyan font-mono">
+                <span>Escala 1:200</span>
+                <span class="flex items-center gap-1 group-hover:translate-x-1 transition-transform">Ver Detalhes <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- DEPOIMENTOS & AVALIAÇÕES (CARROSSEL) -->
+    <section id="depoimentos" class="relative px-4 sm:px-8 py-20">
+      <div class="max-w-6xl mx-auto">
+        
+        <div class="text-center max-w-2xl mx-auto mb-14">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-xs font-semibold text-emerald-400 mb-3 uppercase tracking-wider font-mono">
+            Feedback dos Clientes
+          </div>
+          <h2 class="font-heading font-extrabold text-3xl sm:text-4xl text-white">
+            Quem Confia na James 3D
+          </h2>
+          <p class="text-slate-400 mt-2 text-base">
+            De engenheiros de produto a estúdios de arquitetura, veja o que dizem sobre nosso rigor técnico.
+          </p>
+        </div>
+
+        <!-- Carousel Container -->
+        <div class="relative bg-gradient-to-b from-slate-900/80 to-[#0C1322] border border-white/10 rounded-3xl p-6 sm:p-12 shadow-2xl backdrop-blur-xl">
+          
+          <div class="overflow-hidden" id="testimonial-slider">
+            <div class="flex transition-transform duration-500 ease-out" id="testimonial-track">
+              
+              <!-- Slide 1 -->
+              <div class="min-w-full flex flex-col items-center text-center px-4">
+                <div class="flex items-center gap-1 text-amber-400 mb-4">
+                  <i data-lucide="star" class="w-5 h-5 fill-amber-400"></i>
+                  <i data-lucide="star" class="w-5 h-5 fill-amber-400"></i>
+                  <i data-lucide="star" class="w-5 h-5 fill-amber-400"></i>
+                  <i data-lucide="star" class="w-5 h-5 fill-amber-400"></i>
+                  <i data-lucide="star" class="w-5 h-5 fill-amber-400"></i>
+                </div>
+                <blockquote class="text-lg sm:text-xl text-slate-200 max-w-3xl leading-relaxed italic">
+                  "Precisávamos de um lote de 45 carcaças mecânicas em ABS com urgência máxima para um cliente da Alemanha. A James 3D entregou antes do prazo com encaixes perfeitos nos parafusos M3. Simplesmente impecável!"
+                </blockquote>
+                <div class="mt-6 flex items-center gap-4">
+                  <div class="w-12 h-12 rounded-full bg-brand-accent/20 border border-brand-accent/40 flex items-center justify-center font-bold text-brand-accent">
+                    RM
+                  </div>
+                  <div class="text-left">
+                    <p class="font-heading font-bold text-white text-sm">Rodrigo Martins</p>
+                    <p class="text-xs text-slate-400 font-mono">Engenheiro Chefe de P&D • Automação Tech</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Slide 2 -->
+              <div class="min-w-full flex flex-col items-center text-center px-4">
+                <div class="flex items-center gap-1 text-amber-400 mb-4">
+                  <i data-lucide="star" class="w-5 h-5 fill-amber-400"></i>
+                  <i data-lucide="star" class="w-5 h-5 fill-amber-400"></i>
+                  <i data-lucide="star" class="w-5 h-5 fill-amber-400"></i>
+                  <i data-lucide="star" class="w-5 h-5 fill-amber-400"></i>
+                  <i data-lucide="star" class="w-5 h-5 fill-amber-400"></i>
+                </div>
+                <blockquote class="text-lg sm:text-xl text-slate-200 max-w-3xl leading-relaxed italic">
+                  "A qualidade da Resina SLA 8K da James 3D é de outro mundo. Os detalhes das miniaturas colecionáveis saíram sem linhas de camada, parecendo peça injetada industrial. Recomendo para qualquer artista exigente."
+                </blockquote>
+                <div class="mt-6 flex items-center gap-4">
+                  <div class="w-12 h-12 rounded-full bg-purple-500/20 border border-purple-500/40 flex items-center justify-center font-bold text-purple-400">
+                    CL
+                  </div>
+                  <div class="text-left">
+                    <p class="font-heading font-bold text-white text-sm">Camila Lins</p>
+                    <p class="text-xs text-slate-400 font-mono">Concept Artist & Escultora 3D</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Slide 3 -->
+              <div class="min-w-full flex flex-col items-center text-center px-4">
+                <div class="flex items-center gap-1 text-amber-400 mb-4">
+                  <i data-lucide="star" class="w-5 h-5 fill-amber-400"></i>
+                  <i data-lucide="star" class="w-5 h-5 fill-amber-400"></i>
+                  <i data-lucide="star" class="w-5 h-5 fill-amber-400"></i>
+                  <i data-lucide="star" class="w-5 h-5 fill-amber-400"></i>
+                  <i data-lucide="star" class="w-5 h-5 fill-amber-400"></i>
+                </div>
+                <blockquote class="text-lg sm:text-xl text-slate-200 max-w-3xl leading-relaxed italic">
+                  "O simulador online facilitou muito a nossa rotina no escritório de arquitetura. O atendimento no WhatsApp foi super atencioso na escolha do filamento para a maquete física."
+                </blockquote>
+                <div class="mt-6 flex items-center gap-4">
+                  <div class="w-12 h-12 rounded-full bg-brand-cyan/20 border border-brand-cyan/40 flex items-center justify-center font-bold text-brand-cyan">
+                    FA
+                  </div>
+                  <div class="text-left">
+                    <p class="font-heading font-bold text-white text-sm">Felipe Andrade</p>
+                    <p class="text-xs text-slate-400 font-mono">Arquiteto Titular • Andrade & Co.</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Carousel Controls -->
+          <div class="flex items-center justify-between mt-8 pt-6 border-t border-slate-800">
+            <button type="button" id="slider-prev" class="p-2.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors" aria-label="Depoimento Anterior">
+              <i data-lucide="chevron-left" class="w-5 h-5"></i>
+            </button>
+            
+            <!-- Indicators Dots -->
+            <div class="flex items-center gap-2" id="slider-dots">
+              <button class="dot-btn w-3 h-3 rounded-full bg-brand-accent transition-all"></button>
+              <button class="dot-btn w-3 h-3 rounded-full bg-slate-700 transition-all"></button>
+              <button class="dot-btn w-3 h-3 rounded-full bg-slate-700 transition-all"></button>
+            </div>
+
+            <button type="button" id="slider-next" class="p-2.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors" aria-label="Próximo Depoimento">
+              <i data-lucide="chevron-right" class="w-5 h-5"></i>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FAQ SECTION (DUVIDAS FREQUENTES) -->
+    <section id="faq" class="relative px-4 sm:px-8 py-20 bg-slate-950/60">
+      <div class="max-w-4xl mx-auto">
+        
+        <div class="text-center mb-12">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-accent/10 border border-brand-accent/30 text-xs font-semibold text-brand-accent mb-3 uppercase tracking-wider font-mono">
+            Tire suas dúvidas
+          </div>
+          <h2 class="font-heading font-extrabold text-3xl sm:text-4xl text-white">
+            Perguntas Frequentes
+          </h2>
+          <p class="text-slate-400 mt-2 text-base">
+            Tudo o que você precisa saber sobre o processo de impressão 3D na James 3D.
+          </p>
+        </div>
+
+        <div class="space-y-4" id="faq-accordion">
+          
+          <!-- FAQ 1 -->
+          <div class="faq-card rounded-2xl bg-slate-900/70 border border-white/5 overflow-hidden transition-all">
+            <button type="button" class="faq-trigger w-full p-5 text-left flex items-center justify-between text-white font-semibold text-base sm:text-lg">
+              <span>Quais formatos de arquivo 3D posso enviar?</span>
+              <i data-lucide="chevron-down" class="faq-icon w-5 h-5 text-brand-cyan transition-transform duration-300"></i>
+            </button>
+            <div class="faq-content hidden px-5 pb-5 text-sm text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3">
+              Aceitamos arquivos nos formatos <strong>.STL</strong>, <strong>.OBJ</strong>, <strong>.STEP</strong> e <strong>.3MF</strong>. Caso você tenha apenas um desenho técnico 2D ou uma ideia desenhada à mão, nossa equipe pode realizar a modelagem 3D paramétrica para você através do nosso serviço de engenharia reversa.
+            </div>
+          </div>
+
+          <!-- FAQ 2 -->
+          <div class="faq-card rounded-2xl bg-slate-900/70 border border-white/5 overflow-hidden transition-all">
+            <button type="button" class="faq-trigger w-full p-5 text-left flex items-center justify-between text-white font-semibold text-base sm:text-lg">
+              <span>Qual é o prazo médio de entrega da peça?</span>
+              <i data-lucide="chevron-down" class="faq-icon w-5 h-5 text-brand-cyan transition-transform duration-300"></i>
+            </button>
+            <div class="faq-content hidden px-5 pb-5 text-sm text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3">
+              Protótipos rápidos e peças de porte pequeno a médio normalmente são impressos e despachados em <strong>24 a 48 horas úteis</strong>. Para produções em série (dezenas ou centenas de unidades), alinhamos um cronograma escalonado para você receber as primeiras unidades imediatamente.
+            </div>
+          </div>
+
+          <!-- FAQ 3 -->
+          <div class="faq-card rounded-2xl bg-slate-900/70 border border-white/5 overflow-hidden transition-all">
+            <button type="button" class="faq-trigger w-full p-5 text-left flex items-center justify-between text-white font-semibold text-base sm:text-lg">
+              <span>Qual material escolher: PLA, PETG, ABS ou Resina SLA?</span>
+              <i data-lucide="chevron-down" class="faq-icon w-5 h-5 text-brand-cyan transition-transform duration-300"></i>
+            </button>
+            <div class="faq-content hidden px-5 pb-5 text-sm text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3">
+              Depende do objetivo:
+              <ul class="list-disc pl-5 mt-2 space-y-1">
+                <li><strong>PLA:</strong> Ideal para maquetes, protótipos visuais e peças decorativas sem estresse mecânico.</li>
+                <li><strong>PETG:</strong> Ideal para peças utilitárias que pegam sol, umidade ou exigem boa flexibilidade mecânica.</li>
+                <li><strong>ABS:</strong> Ideal para peças mecânicas que sofrem atrito, impactos fortes e temperaturas até 100°C.</li>
+                <li><strong>Resina SLA:</strong> Essencial para quem busca altíssima definição visual (miniaturas, joias, biomodelos).</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- FAQ 4 -->
+          <div class="faq-card rounded-2xl bg-slate-900/70 border border-white/5 overflow-hidden transition-all">
+            <button type="button" class="faq-trigger w-full p-5 text-left flex items-center justify-between text-white font-semibold text-base sm:text-lg">
+              <span>Vocês assinam Acordo de Não Divulgação (NDA)?</span>
+              <i data-lucide="chevron-down" class="faq-icon w-5 h-5 text-brand-cyan transition-transform duration-300"></i>
+            </button>
+            <div class="faq-content hidden px-5 pb-5 text-sm text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3">
+              Sim, com certeza! Entendemos a importância da confidencialidade industrial e patentes. Se o seu projeto necessita de termo de sigilo, basta solicitar antes do envio dos arquivos e forneceremos o documento assinado digitalmente.
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CALL TO ACTION FINAL BANNER -->
+    <section class="relative px-4 sm:px-8 py-16">
+      <div class="max-w-6xl mx-auto rounded-3xl p-8 sm:p-14 bg-gradient-to-r from-slate-900 via-[#101b33] to-slate-900 border border-brand-accent/30 shadow-2xl relative overflow-hidden">
+        
+        <div class="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-brand-accent/10 blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8 text-center lg:text-left">
+          <div class="max-w-xl">
+            <span class="text-xs font-mono font-bold text-brand-accent uppercase tracking-wider">Pronto para materializar sua ideia?</span>
+            <h2 class="font-heading font-extrabold text-3xl sm:text-4xl text-white mt-2">
+              Envie sua peça agora e receba um orçamento em até 15 minutos!
+            </h2>
+            <p class="text-slate-300 text-sm sm:text-base mt-2">
+              Nossa equipe de engenharia está a postos para analisar seu arquivo e sugerir o melhor custo-benefício.
+            </p>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+            <a href="https://wa.me/5511999999999?text=Ol%C3%A1%20James%203D!%20Gostaria%20de%20um%20or%C3%A7amento%20para%20minha%20pe%C3%A7a." target="_blank" rel="noopener noreferrer" class="px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-base shadow-xl shadow-emerald-900/40 flex items-center justify-center gap-2 transition-transform hover:scale-105">
+              <i data-lucide="message-circle" class="w-5 h-5"></i>
+              Conversar no WhatsApp
+            </a>
+            <a href="#calculadora" class="px-8 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-base border border-slate-600 flex items-center justify-center gap-2 transition-all">
+              <i data-lucide="calculator" class="w-5 h-5 text-brand-accent"></i>
+              Usar Simulador
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- RODAPÉ (FOOTER) -->
+  <footer class="relative z-10 bg-[#04070D] border-t border-white/5 pt-16 pb-12 px-4 sm:px-8 text-slate-400 text-sm">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-slate-800">
+      
+      <!-- Brand & Mission (2 cols) -->
+      <div class="lg:col-span-2 space-y-4">
+        <a href="#hero" class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-accent to-amber-500 flex items-center justify-center text-white font-bold">
+            <i data-lucide="box" class="w-6 h-6 stroke-[2.5]"></i>
+          </div>
+          <div>
+            <span class="font-heading font-extrabold text-2xl tracking-wider text-white">
+              JAMES<span class="text-brand-accent">3D</span>
+            </span>
+          </div>
+        </a>
+        <p class="text-slate-400 text-xs sm:text-sm max-w-sm leading-relaxed">
+          Especialistas em manufatura aditiva de alta precisão. Impressões FDM e SLA para indústria, arquitetura, odontologia e desenvolvimento de produtos inovadores.
+        </p>
+        <p class="text-xs text-brand-cyan font-mono">
+          "Transformando ideias em realidade tridimensional"
+        </p>
+      </div>
+
+      <!-- Links Rápidos -->
+      <div>
+        <h4 class="text-white font-heading font-bold text-sm tracking-wider uppercase mb-4">Navegação</h4>
+        <ul class="space-y-2 text-xs sm:text-sm">
+          <li><a href="#hero" class="hover:text-brand-cyan transition-colors">Início</a></li>
+          <li><a href="#servicos" class="hover:text-brand-cyan transition-colors">Nossos Serviços</a></li>
+          <li><a href="#calculadora" class="hover:text-brand-accent transition-colors">Simulador de Orçamento</a></li>
+          <li><a href="#portfolio" class="hover:text-brand-cyan transition-colors">Galeria de Peças</a></li>
+          <li><a href="#faq" class="hover:text-brand-cyan transition-colors">Dúvidas Frequentes</a></li>
+        </ul>
+      </div>
+
+      <!-- Materiais & Serviços -->
+      <div>
+        <h4 class="text-white font-heading font-bold text-sm tracking-wider uppercase mb-4">Materiais</h4>
+        <ul class="space-y-2 text-xs sm:text-sm font-mono">
+          <li>PLA+ de Alta Fluidez</li>
+          <li>PETG Reforçado</li>
+          <li>ABS Resistente a Impacto</li>
+          <li>Nylon Carbono (PA-CF)</li>
+          <li>Resina SLA 8K Micrométrica</li>
+        </ul>
+      </div>
+
+      <!-- Contato & Localização -->
+      <div>
+        <h4 class="text-white font-heading font-bold text-sm tracking-wider uppercase mb-4">Contato & Lab</h4>
+        <ul class="space-y-2.5 text-xs sm:text-sm">
+          <li class="flex items-center gap-2">
+            <i data-lucide="map-pin" class="w-4 h-4 text-brand-accent"></i>
+            <span>São Paulo, SP - Brasil</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <i data-lucide="phone" class="w-4 h-4 text-brand-cyan"></i>
+            <a href="https://wa.me/5511999999999" class="hover:underline font-mono">(11) 99999-9999</a>
+          </li>
+          <li class="flex items-center gap-2">
+            <i data-lucide="mail" class="w-4 h-4 text-brand-cyan"></i>
+            <span class="font-mono">contato@james3d.com.br</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <i data-lucide="clock" class="w-4 h-4 text-slate-500"></i>
+            <span>Seg a Sex: 08h às 18h</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Bottom Copyright & Socials -->
+    <div class="max-w-7xl mx-auto pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+      <div>
+        &copy; 2026 James 3D - Manufatura Aditiva. Todos os direitos reservados.
+      </div>
+      <div class="flex items-center gap-4 text-slate-400">
+        <a href="#" class="hover:text-brand-accent transition-colors" title="Instagram">
+          <i data-lucide="instagram" class="w-4 h-4"></i>
+        </a>
+        <a href="#" class="hover:text-brand-cyan transition-colors" title="LinkedIn">
+          <i data-lucide="linkedin" class="w-4 h-4"></i>
+        </a>
+        <a href="#" class="hover:text-brand-accent transition-colors" title="YouTube">
+          <i data-lucide="youtube" class="w-4 h-4"></i>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- FLOATING WHATSAPP BUTTON (COM PULSO E NOTIFICAÇÃO) -->
+  <div class="fixed bottom-6 right-6 z-50 flex items-center gap-3">
+    
+    <!-- Floating Quick Speech Bubble -->
+    <div id="whatsapp-popup" class="hidden sm:flex items-center gap-2 py-2 px-3.5 rounded-full bg-slate-900/95 border border-emerald-500/40 text-xs text-white shadow-2xl backdrop-blur-md animate-bounce">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-online"></span>
+      <span>Orçamento em 15 min no WhatsApp!</span>
+    </div>
+
+    <a href="https://wa.me/5511999999999?text=Ol%C3%A1%20James%203D!%20Gostaria%20de%20um%20or%C3%A7amento%20para%20impress%C3%A3o%203D." target="_blank" rel="noopener noreferrer" class="relative group w-14 h-14 rounded-full bg-gradient-to-tr from-emerald-600 to-green-500 flex items-center justify-center text-white shadow-xl shadow-emerald-950/50 hover:scale-110 active:scale-95 transition-transform" aria-label="Falar no WhatsApp com a James 3D">
+      <span class="absolute inset-0 rounded-full bg-emerald-400 opacity-30 pulse-online"></span>
+      <i data-lucide="message-circle" class="w-7 h-7 relative z-10 fill-current"></i>
+    </a>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed top-6 right-6 z-50 transform translate-y-[-150%] opacity-0 transition-all duration-300 max-w-sm p-4 rounded-2xl bg-slate-900 border border-brand-accent/50 text-white shadow-2xl flex items-center gap-3">
+    <i data-lucide="info" id="toast-icon" class="w-5 h-5 text-brand-accent flex-shrink-0"></i>
+    <div class="text-xs sm:text-sm">
+      <p id="toast-title" class="font-bold">Notificação</p>
+      <p id="toast-msg" class="text-slate-300">Mensagem do sistema</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+  </script>
+</body>
+</html>
+

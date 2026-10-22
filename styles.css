@@ -1,0 +1,228 @@
+/* James 3D - Estilos Customizados & Glassmorphism */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg-primary: #070B14;
+  --bg-card: rgba(14, 22, 38, 0.7);
+  --border-glow: rgba(56, 189, 248, 0.2);
+  --accent-orange: #F97316;
+  --accent-cyan: #0EA5E9;
+  --text-muted: #94A3B8;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: var(--bg-primary);
+  color: #F8FAFC;
+  overflow-x: hidden;
+  selection-background-color: #F97316;
+  selection-color: #FFFFFF;
+}
+
+::selection {
+  background: #F97316;
+  color: #FFFFFF;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #070B14;
+}
+::-webkit-scrollbar-thumb {
+  background: #1E293B;
+  border-radius: 4px;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #F97316;
+}
+
+/* Background Grids & Ambient Glow */
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+.ambient-glow-cyan {
+  position: absolute;
+  filter: blur(120px);
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.18) 0%, rgba(14, 165, 233, 0) 70%);
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+.ambient-glow-orange {
+  position: absolute;
+  filter: blur(120px);
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.18) 0%, rgba(249, 115, 22, 0) 70%);
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: rgba(14, 22, 38, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel:hover {
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.glass-card-interactive {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card-interactive:hover {
+  transform: translateY(-4px);
+  border-color: rgba(249, 115, 22, 0.4);
+  box-shadow: 0 12px 30px -10px rgba(249, 115, 22, 0.15);
+}
+
+/* Filament Neon Text & Glow Effects */
+.text-glow-cyan {
+  text-shadow: 0 0 20px rgba(14, 165, 233, 0.6);
+}
+
+.text-glow-orange {
+  text-shadow: 0 0 20px rgba(249, 115, 22, 0.6);
+}
+
+.box-glow-orange {
+  box-shadow: 0 0 25px -5px rgba(249, 115, 22, 0.35);
+}
+
+.box-glow-cyan {
+  box-shadow: 0 0 25px -5px rgba(14, 165, 233, 0.35);
+}
+
+/* Laser Layer Scanning Effect for 3D simulation */
+@keyframes laser-scan {
+  0% {
+    top: 5%;
+    opacity: 0.2;
+  }
+  50% {
+    top: 90%;
+    opacity: 0.9;
+  }
+  100% {
+    top: 5%;
+    opacity: 0.2;
+  }
+}
+
+.laser-line {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #F97316, #38BDF8, transparent);
+  box-shadow: 0 0 15px #F97316, 0 0 30px #38BDF8;
+  animation: laser-scan 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Pulsing Badge & Floating Action */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 12px rgba(34, 197, 94, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+}
+
+.pulse-online {
+  animation: pulse-ring 2s infinite;
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float {
+  animation: float-slow 4s ease-in-out infinite;
+}
+
+/* Custom Range Slider for Infill & Dimension */
+input[type=range] {
+  -webkit-appearance: none;
+  background: #1E293B;
+  height: 8px;
+  border-radius: 9999px;
+  outline: none;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #F97316;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(249, 115, 22, 0.8);
+  border: 2px solid #FFFFFF;
+  transition: transform 0.15s ease;
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* Drag and Drop Zone */
+.dropzone-active {
+  border-color: #F97316 !important;
+  background-color: rgba(249, 115, 22, 0.08) !important;
+}
+
+/* Badge tags */
+.tech-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  background: rgba(14, 165, 233, 0.1);
+  color: #38BDF8;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.tech-badge-orange {
+  background: rgba(249, 115, 22, 0.1);
+  color: #FB923C;
+  border: 1px solid rgba(249, 115, 22, 0.25);
+}
+
+/* 3D Canvas Container */
+#hero-3d-canvas, #modal-3d-canvas {
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  outline: none;
+}
+
